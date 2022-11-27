@@ -1,0 +1,37 @@
+{% extends 'layout.html' %}
+
+{% block content %}
+    <table class="table table-striped">
+  <thead>
+    <tr>
+      <th scope="col">id</th>
+      <th scope="col">姓名</th>
+      <th scope="col">密码</th>
+      <th scope="col">年龄</th>
+      <th scope="col">工资</th>
+      <th scope="col">入职时间</th>
+      <th scope="col">性别</th>
+      <th scope="col">部门</th>
+      <th scope="col">操作</th>
+    </tr>
+  </thead>
+  <tbody>
+        {% for item in user_data %}
+            <tr>
+                <td>{{ item.id }}</td>
+                <td>{{ item.name }}</td>
+                <td>{{ item.password }}</td>
+                <td>{{ item.age }}</td>
+                <td>{{ item.salary }}</td>
+                <td>{{ item.create_time| date:"Y-m-d HH:MM:SS" }}</td>
+                <td>{{ item.get_gender_display }}</td>
+                <td>{{ item.depart.title }}</td>
+                <td>
+                    <a href="" class="btn btn-secondary btn-sm">编辑</a>
+                    <a href="" class="btn btn-danger btn-sm">删除</a>
+                </td>
+            </tr>
+        {% endfor %}
+  </tbody>
+</table>
+{% endblock %}
