@@ -1,0 +1,36 @@
+{% extends 'layout.html' %}
+
+{% block content %}
+    <a href="/mobile/add/" class="btn btn-primary">新建靓号（ModleForm）</a>
+    <table class="table table-striped">
+  <thead>
+    <tr>
+      <th scope="col">id</th>
+      <th scope="col">电话号码</th>
+      <th scope="col">价格</th>
+      <th scope="col">等级</th>
+      <th scope="col">状态</th>
+{#      <th scope="col">更新时间</th>#}
+      <th scope="col">上传时间</th>
+      <th scope="col">操作</th>
+    </tr>
+  </thead>
+  <tbody>
+        {% for item in mobile_data %}
+            <tr>
+                <td>{{ item.id }}</td>
+                <td>{{ item.mobile }}</td>
+                <td>{{ item.price }}</td>
+                <td>{{ item.get_level_display }}</td>
+                <td>{{ item.get_status_display }}</td>
+{#                <td>{{ item.update_time| date:"Y-m-d H:i:s" }}</td>#}
+                <td>{{ item.create_time| date:"Y-m-d H:i:s" }}</td>
+                <td>
+                    <a href="/user/{{ item.id }}/edit/" class="btn btn-secondary btn-sm">编辑</a>
+                    <a href="/user/{{ item.id }}/del/" class="btn btn-danger btn-sm">删除</a>
+                </td>
+            </tr>
+        {% endfor %}
+  </tbody>
+</table>
+{% endblock %}

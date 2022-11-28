@@ -1,3 +1,5 @@
+import datetime
+
 from django.shortcuts import render, HttpResponse, redirect
 
 # Create your views here.
@@ -88,3 +90,36 @@ def user_edit(request,nid):
 def user_del(request, nid):
     models.staff_info.objects.filter(id = nid).delete()
     return redirect('/user/')
+
+
+def mobile(request):
+    mobile_data = models.Mobile_info.objects.all().order_by("-level")
+    return render(request, "mobile.html", {"mobile_data":mobile_data})
+
+
+from django import forms
+class Mobile_info(forms.ModelForm):
+    class Meta:
+        model = models.Mobile_info
+        # fields = ['mobile', 'price', 'level', "status"]
+        fields = "__all__"
+        widgets = {
+            "mobile": forms.TextInput(attrs={"class": "form-control"}),
+            "price": forms.TextInput(attrs={"class": "form-control"}),
+            "level": forms.Select(attrs={"class": "form-control"}),
+            "status": forms.Select(attrs={"class": "form-control"}),
+            "create_time": forms.TextInput(attrs={"class": "form-control"}),
+        }
+def mobile_add(request):
+    if request.method =='GET':
+        form = Mobile_info()
+        return render(request,"mobile_add.html", {"form":form})
+    # 当用户POST提交时,数据校验
+
+    form = Mobile_info(data=request.POST)
+    if form.is_valid():
+        print(form.cleaned_data)
+        form.save()
+        return redirect('/mobile/')
+    else:
+        return render(request, 'mobile_add.html', {'form': form})

@@ -32,4 +32,7 @@ urlpatterns = [
     path('user/<int:nid>/edit/', views.user_edit),
     path('user/<int:nid>/del/', views.user_del),
 
+    # 靓号管理
+    path('mobile/', views.mobile),
+    path('mobile/add/', views.mobile_add),
 ]

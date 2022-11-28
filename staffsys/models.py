@@ -26,3 +26,29 @@ class staff_info(models.Model):
         (2, '女')
     )
     gender = models.SmallIntegerField(verbose_name='性别',choices=gender_choices)
+
+
+class Mobile_info(models.Model):
+    '''靓号数据'''
+    # id 会自动创建
+    mobile = models.CharField(verbose_name="手机号码", max_length=11)
+    price = models.IntegerField(verbose_name="手机号价格")
+    level_choices=(
+        (1,"★☆☆☆☆"),
+        (2,"★★☆☆☆"),
+        (3,"★★★☆☆"),
+        (4,"★★★★☆"),
+        (5,"★★★★★"),
+
+    )
+
+    level = models.SmallIntegerField(verbose_name='手机号级别', choices=level_choices, default=1)
+
+    status_choices=(
+        (1,"已占用"),
+        (2,"未使用")
+    )
+
+    status = models.SmallIntegerField(verbose_name="状态", choices=status_choices, default=2)
+    create_time = models.DateTimeField(verbose_name='上传时间')
+    # update_time = models.DateTimeField(verbose_name='修改时间', null=True, blank=True)
