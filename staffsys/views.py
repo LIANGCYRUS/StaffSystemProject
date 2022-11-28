@@ -39,3 +39,52 @@ def user(request):
 
     user_data = models.staff_info.objects.all()
     return render(request, "user.html",{"user_data":user_data})
+
+from django import forms
+class UserModelForm(forms.ModelForm):
+    class Meta:
+        model = models.staff_info
+        fields = ['name','password','age',"salary","create_time","depart","gender"]
+        widgets = {
+            "name":forms.TextInput(attrs={"class":"form-control"}),
+            "password":forms.TextInput(attrs={"class":"form-control"}),
+            "age":forms.TextInput(attrs={"class":"form-control"}),
+            "salary":forms.TextInput(attrs={"class":"form-control"}),
+            "create_time":forms.TextInput(attrs={"class":"form-control"}),
+            "depart":forms.Select(attrs={"class":"form-control"}),
+            "gender":forms.Select(attrs={"class":"form-control"}),
+        }
+def user_add(request):
+    '''添加用户 ModelForm'''
+    if request.method == "GET":
+        form = UserModelForm()
+        return render(request, 'user_add.html',{'form':form})
+
+    # 当用户POST提交时,数据校验
+    form = UserModelForm(data=request.POST)
+    if form.is_valid():
+        print(form.cleaned_data)
+        form.save()
+        return redirect('/user/')
+    else:
+        return render(request, 'user_add.html', {'form': form})
+
+
+def user_edit(request,nid):
+    edit_obj = models.staff_info.objects.filter(id=nid).first()
+
+    if request.method == "GET":
+        # 根据获取的id读取数据库
+        form = UserModelForm(instance=edit_obj)
+        return  render(request, 'user_edit.html',{"form":form})
+
+    form = UserModelForm(data=request.POST,instance=edit_obj)
+    if form.is_valid():
+        form.save()
+        return redirect('/user/')
+    return render(request, 'user_edit.html', {'form':form})
+
+
+def user_del(request, nid):
+    models.staff_info.objects.filter(id = nid).delete()
+    return redirect('/user/')

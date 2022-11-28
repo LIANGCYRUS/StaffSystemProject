@@ -5,6 +5,9 @@ class staff_department(models.Model):
     '''员工部门表'''
     title = models.CharField(verbose_name='标题', max_length=32)
 
+    # 很重要,使其返回是名称而不是对象
+    def __str__(self):
+        return self.title
 
 class staff_info(models.Model):
     '''员工表'''
@@ -16,7 +19,7 @@ class staff_info(models.Model):
     salary = models.DecimalField(verbose_name='账户余额',max_digits=10,decimal_places=2,default=0)
     create_time = models.DateTimeField(verbose_name='入职时间')
 
-    depart = models.ForeignKey(to='staff_department', to_field='id', on_delete=models.CASCADE)
+    depart = models.ForeignKey(to='staff_department', to_field='id', on_delete=models.CASCADE, verbose_name="部门")
 
     gender_choices = (
         (1, '男'),

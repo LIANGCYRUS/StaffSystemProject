@@ -1,6 +1,7 @@
 {% extends 'layout.html' %}
 
 {% block content %}
+    <a href="/user/add" class="btn btn-primary">新建员工（ModleForm）</a>
     <table class="table table-striped">
   <thead>
     <tr>
@@ -23,12 +24,12 @@
                 <td>{{ item.password }}</td>
                 <td>{{ item.age }}</td>
                 <td>{{ item.salary }}</td>
-                <td>{{ item.create_time| date:"Y-m-d HH:MM:SS" }}</td>
+                <td>{{ item.create_time| date:"Y-m-d H:i:s" }}</td>
                 <td>{{ item.get_gender_display }}</td>
                 <td>{{ item.depart.title }}</td>
                 <td>
-                    <a href="" class="btn btn-secondary btn-sm">编辑</a>
-                    <a href="" class="btn btn-danger btn-sm">删除</a>
+                    <a href="/user/{{ item.id }}/edit/" class="btn btn-secondary btn-sm">编辑</a>
+                    <a href="/user/{{ item.id }}/del/" class="btn btn-danger btn-sm">删除</a>
                 </td>
             </tr>
         {% endfor %}

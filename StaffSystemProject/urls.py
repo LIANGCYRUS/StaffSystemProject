@@ -28,6 +28,8 @@ urlpatterns = [
 
     # 人员管理
     path('user/', views.user),
-
+    path('user/add/', views.user_add),
+    path('user/<int:nid>/edit/', views.user_edit),
+    path('user/<int:nid>/del/', views.user_del),
 
 ]
