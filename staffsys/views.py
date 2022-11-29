@@ -1,10 +1,9 @@
-import datetime
-from django import forms
 from django.core.exceptions import ValidationError
 from django.core.validators import RegexValidator
-from django.shortcuts import render, HttpResponse, redirect
+from django.shortcuts import render, redirect
 from staffsys import models
 from django import forms
+from django.core.paginator import Paginator, Page
 
 
 # Create your views here.
@@ -122,7 +121,7 @@ class MobileModelForm(forms.ModelForm):
     def clean_mobile(self):
         txt_mobile = self.cleaned_data['mobile']
 
-        # 以电话号码为查询,使用exists来查看是否存在,存在则返回TURE,不存在返回FALES
+        # 以电话号码为查询,使用exists来查看是否存在,存在则返回TURE,不存在返回FALSE
         moblie_exists = models.Mobile_info.objects.filter(mobile=txt_mobile).exists()
 
         if moblie_exists:
@@ -135,25 +134,34 @@ def mobile(request):
     # for i in range(300):
     #     models.Mobile_info.objects.create(mobile='18111100001', price=100, level=1,status=1,create_time="2022-11-29")
 
-    # 创建空字典
+    # 创建空字典0
     data_dict = {}
     # q有值则拿q值，否则空值
     query_value = request.GET.get('q', "")
 
-    if query_value:
+    if query_value:  # 如果取到了需要查询的数据，则添加字典上
         data_dict['mobile__contains'] = query_value
+        '''
+        以上语句就会组合成：
+        data_dict = { 'mobile__contains' : query_value }
+        再放到搜索条件上去查询数据库
+        '''
+    mobile_data = models.Mobile_info.objects.filter(**data_dict)
 
-    # 获取已get请求的page的值，如果没有值，默认为1，在进行转换成为数字，因为后天要做页面计算
-    page_value = int(request.GET.get('page', 1))
-    # 表示一页显示30行
-    page_show = 30
+    # ********** 分页处理 - 开始 ********** #
 
-    start_page = (page_value - 1) * page_show
-    end_page = page_value * page_show
+    # 获取需要显示的页数
+    page = request.GET.get('page')
+    # 使用django自带的分页类 Paginator，在传参中，第一项是数据库对象，二项是每页显示的条数
+    paginator = Paginator(mobile_data,20)
+    # .get_page()是获得当前页数的数据，这个方法的好处是，如果输入大于页数的数，也只会显示最大页数。输入不是数字的，就会显示第一页。十分方便不需要做判断。
+    mobile_paginator = paginator.get_page(page)
 
-    # 搜索条件如果想要放入的是字典，可以用两个 **星号
-    mobile_data = models.Mobile_info.objects.filter(**data_dict)[start_page:end_page]
-    return render(request, "mobile.html", {"mobile_data": mobile_data, "query_value": query_value})
+    # ********** 分页处理 - 结束 ********** #
+
+    # 搜索条件如果想要放入的是字典，可以用两个 **星号，如果filter为空值，就会搜索全部。
+
+    return render(request, "mobile.html", {"mobile_paginator": mobile_paginator})
 
 
 def mobile_add(request):
