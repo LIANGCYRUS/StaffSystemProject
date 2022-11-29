@@ -35,4 +35,6 @@ urlpatterns = [
     # 靓号管理
     path('mobile/', views.mobile),
     path('mobile/add/', views.mobile_add),
+    path('mobile/<int:nid>/edit/', views.mobile_edit),
+    path('mobile/<int:nid>/del/', views.mobile_del),
 ]

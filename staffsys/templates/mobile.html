@@ -2,6 +2,10 @@
 
 {% block content %}
     <a href="/mobile/add/" class="btn btn-primary">新建靓号（ModleForm）</a>
+    <form action="" method="get">
+        <input type="text" name="q" class="form-control w-25" placeholder="请输入电话号码" value="{{ query_value }}">
+        <input type="submit" value="搜索">
+    </form>
     <table class="table table-striped">
   <thead>
     <tr>
@@ -26,11 +30,16 @@
 {#                <td>{{ item.update_time| date:"Y-m-d H:i:s" }}</td>#}
                 <td>{{ item.create_time| date:"Y-m-d H:i:s" }}</td>
                 <td>
-                    <a href="/user/{{ item.id }}/edit/" class="btn btn-secondary btn-sm">编辑</a>
-                    <a href="/user/{{ item.id }}/del/" class="btn btn-danger btn-sm">删除</a>
+                    <a href="/mobile/{{ item.id }}/edit/" class="btn btn-secondary btn-sm">编辑</a>
+                    <a href="/mobile/{{ item.id }}/del/" class="btn btn-danger btn-sm">删除</a>
                 </td>
             </tr>
         {% endfor %}
   </tbody>
 </table>
+    <nav aria-label="Page navigation">
+        <ul class="pagination justify-content-end">
+            {{ page_string }}
+        </ul>
+    </nav>
 {% endblock %}
