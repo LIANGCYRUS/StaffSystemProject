@@ -3,7 +3,7 @@ from django.db import models
 
 # Create your models here.
 class staff_department(models.Model):
-    '''员工部门表'''
+    """员工部门表"""
     title = models.CharField(verbose_name='标题', max_length=32)
 
     # 很重要,使其返回是名称而不是对象
@@ -12,7 +12,7 @@ class staff_department(models.Model):
 
 
 class staff_info(models.Model):
-    '''员工表'''
+    """员工表"""
     name = models.CharField(verbose_name='姓名', max_length=16)
     password = models.CharField(verbose_name='密码', max_length=64)
     age = models.IntegerField(verbose_name='年纪')
@@ -31,7 +31,7 @@ class staff_info(models.Model):
 
 
 class Mobile_info(models.Model):
-    '''靓号数据'''
+    """靓号数据"""
     # id 会自动创建
     mobile = models.CharField(verbose_name="手机号码", max_length=11)
     price = models.IntegerField(verbose_name="手机号价格")
@@ -54,3 +54,9 @@ class Mobile_info(models.Model):
     status = models.SmallIntegerField(verbose_name="状态", choices=status_choices, default=2)
     create_time = models.DateTimeField(verbose_name='上传时间')
     # update_time = models.DateTimeField(verbose_name='修改时间', null=True, blank=True)
+
+
+class Admin_info(models.Model):
+    """管理员 数据库表"""
+    admin_username = models.CharField(verbose_name="管理员名", max_length=32)
+    admin_password = models.CharField(verbose_name="管理员密码", max_length=64)

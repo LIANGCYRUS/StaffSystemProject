@@ -37,4 +37,7 @@ urlpatterns = [
     path('mobile/add/', views.mobile_add),
     path('mobile/<int:nid>/edit/', views.mobile_edit),
     path('mobile/<int:nid>/del/', views.mobile_del),
+
+    #管理员管理
+    path('admin/', views.admin),
 ]
