@@ -56,7 +56,7 @@ class Mobile_info(models.Model):
     # update_time = models.DateTimeField(verbose_name='修改时间', null=True, blank=True)
 
 
-class Admin_info(models.Model):
+class AdminInfo(models.Model):
     """管理员 数据库表"""
-    admin_username = models.CharField(verbose_name="管理员名", max_length=32)
-    admin_password = models.CharField(verbose_name="管理员密码", max_length=64)
+    username = models.CharField(verbose_name="管理员名", max_length=16)
+    password = models.CharField(verbose_name="管理员密码", max_length=200)

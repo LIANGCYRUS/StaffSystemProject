@@ -15,7 +15,7 @@ Including another URLconf
 """
 from django.contrib import admin
 from django.urls import path
-from staffsys import views
+from staffsys import views, admin
 
 urlpatterns = [
     # path('admin/', admin.site.urls),
@@ -39,5 +39,6 @@ urlpatterns = [
     path('mobile/<int:nid>/del/', views.mobile_del),
 
     #管理员管理
-    path('admin/', views.admin),
+    path('admin/', admin.admin_index),
+    path('admin/add', admin.admin_add),
 ]

@@ -1,0 +1,55 @@
+{% extends 'layout.html' %}
+
+{% load static %}
+
+{% block content %}
+    <a href="/admin/add" class="btn btn-primary">新建管理人员（ModleForm）</a>
+    <table class="table table-striped">
+  <thead>
+    <tr>
+      <th scope="col">id</th>
+      <th scope="col">姓名</th>
+      <th scope="col">密码</th>
+      <th scope="col">操作</th>
+    </tr>
+  </thead>
+  <tbody>
+        {% for item in mobile_paginator %}
+            <tr>
+                <td>{{ item.id }}</td>
+                <td>{{ item.username }}</td>
+                <td>{{ item.password }}</td>
+                <td>
+                    <a href="/user/{{ item.id }}/edit/" class="btn btn-secondary btn-sm">编辑</a>
+                    <a href="/user/{{ item.id }}/del/" class="btn btn-danger btn-sm">删除</a>
+                </td>
+            </tr>
+        {% endfor %}
+  </tbody>
+</table>
+<nav aria-label="Page navigation">
+  <ul class="pagination justify-content-end">
+      <li class="page-item"><a class="page-link" href="?page=1" aria-label="Previous">首页</a></li>
+      <li class="page-item">
+          {% if mobile_paginator.has_previous %}
+              <a class="page-link" href="?page={{ mobile_paginator.previous_page_number }}" aria-label="Previous"><span aria-hidden="true">&laquo;</span></a>
+          {% endif %}
+      </li>
+        {% for i in  page_range%}
+            {% if mobile_paginator.number == i %}
+            <li class="page-item active"><a class="page-link" href="?page={{ i }}" aria-label="Previous">{{ i }}</a></li>
+            {% else %}
+            <li class="page-item"><a class="page-link" href="?page={{ i }}" aria-label="Previous">{{ i }}</a></li>
+            {% endif %}
+
+        {% endfor %}
+      <li class="page-item">
+        {% if mobile_paginator.has_next %}
+          <a class="page-link" href="?page={{ mobile_paginator.next_page_number }}" aria-label="Next"><span aria-hidden="true">&raquo;</span></a>
+        {% endif %}
+      </li>
+      <li class="page-item"><a class="page-link" href="?page={{ mobile_paginator.paginator.num_pages }}" aria-label="Previous">尾页</a></li>
+      <li class="page-item"><span>当前第{{ mobile_paginator.number }}页 / 总共{{ mobile_paginator.paginator.num_pages }}页</span></li>
+  </ul>
+</nav>
+{% endblock %}
