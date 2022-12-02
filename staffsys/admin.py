@@ -41,11 +41,11 @@ def admin_index(request):
     # ********** 分页处理 - 结束 ********** #
 
     context = {
-        'mobile_paginator': mobile_paginator,
+        'data': mobile_paginator,
         'page_range': page_range
     }
 
-    return render(request, 'admin_index.html', context)
+    return render(request, 'admin.html', context)
 
 
 from django import forms
@@ -87,3 +87,61 @@ def admin_add(request):
         return redirect('/admin/')
 
     return render(request, 'add.html', {'title': title, 'form': post_data})
+
+def admin_del(request,nid):
+        # 拿到传入的id后，直接在数据库上删除
+        models.AdminInfo.objects.filter(id=nid).delete()
+        return redirect('/admin/')
+
+
+
+class AdminResetModelForm(forms.ModelForm):
+
+    confirm_password = forms.CharField(label='确认密码',widget=forms.PasswordInput)
+    class Meta:
+        model = models.AdminInfo
+        fields = ['password']
+        widgets={'password':forms.PasswordInput(render_value=True)}
+
+    def clean_password(self):
+        pwd = self.cleaned_data.get('password')
+        md5_pws = md5(pwd)
+
+        # 去数据库校验当前密码和新密码是否一样
+        # 1、现在函数中通过instance传参拿到该id， .pk是id的意思，在与新密码进行md5加密后，和数据库的md5密码进行匹配。
+        # 2、如果密码存在 .exists()
+        psw_check = models.AdminInfo.objects.filter(id=self.instance.pk, password=md5_pws).exists()
+
+        # 3、进行判断处理
+        if psw_check:
+            raise ValidationError('不能与以前的密码相同')
+
+        return md5(pwd)
+
+    def clean_confirm_password(self):
+        pwd = self.cleaned_data.get('password')
+        confirm_pwd = md5(self.cleaned_data.get('confirm_password'))
+        if pwd != confirm_pwd:
+            raise ValidationError("密码不一致，请重新确认")
+
+        # return的字段将会保存到数据库中
+        return confirm_pwd
+def admin_reset(request,nid):
+    '''密码重置'''
+
+    reset_id = models.AdminInfo.objects.filter(id=nid).first()
+
+    if not reset_id:
+        return redirect('error.html')
+
+    title = "{}的重置密码".format(reset_id.username)
+
+    if request.method=='GET':
+        form = AdminResetModelForm()
+        return render(request, 'add.html', {'title': title, "form":form})
+
+    form = AdminResetModelForm(data=request.POST, instance=reset_id)
+    if form.is_valid():
+        form.save()
+        return redirect('/admin/')
+    return render(request, 'add.html', {'title': title, "form":form})

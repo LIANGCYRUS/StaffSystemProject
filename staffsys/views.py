@@ -255,7 +255,3 @@ def mobile_del(request, nid):
     # 拿到传入的id后，直接在数据库上删除
     models.Mobile_info.objects.filter(id=nid).delete()
     return redirect('/mobile/')
-
-
-def admin(request):
-    return render(request, "admin.html")
