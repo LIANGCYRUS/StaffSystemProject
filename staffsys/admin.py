@@ -1,4 +1,4 @@
-from django.contrib import admin
+from django import forms
 from django.core.paginator import Paginator
 from django.shortcuts import render, redirect
 from django.core.exceptions import ValidationError
@@ -7,14 +7,14 @@ from staffsys.utils.encrypt import md5
 
 
 def get_page_range(num, total_page, size=7):
-    '''
+    """
     :param num: 当前页数
     :param total_page: 总页数
     :param size: 列表的数量，即 上一页 [1,2,3,4,5,6,7] 下一页
     :return:
-    '''
+    """
 
-    #
+
     min = num - int(size / 2)
     min = min if min >= 1 else 1
     max = min + size - 1
@@ -48,11 +48,11 @@ def admin_index(request):
     return render(request, 'admin.html', context)
 
 
-from django import forms
 
 
 class AdminModelForm(forms.ModelForm):
     confirm_password = forms.CharField(label='确认密码', widget=forms.PasswordInput(render_value=True))
+
     # (render_value=True) 当密码不一致时,数据会保留,不会清空
 
     class Meta:
@@ -74,6 +74,7 @@ class AdminModelForm(forms.ModelForm):
         # return的字段将会保存到数据库中
         return confirm_pwd
 
+
 def admin_add(request):
     title = "新建管理员"
 
@@ -88,20 +89,20 @@ def admin_add(request):
 
     return render(request, 'add.html', {'title': title, 'form': post_data})
 
-def admin_del(request,nid):
-        # 拿到传入的id后，直接在数据库上删除
-        models.AdminInfo.objects.filter(id=nid).delete()
-        return redirect('/admin/')
 
+def admin_del(request, nid):
+    # 拿到传入的id后，直接在数据库上删除
+    models.AdminInfo.objects.filter(id=nid).delete()
+    return redirect('/admin/')
 
 
 class AdminResetModelForm(forms.ModelForm):
+    confirm_password = forms.CharField(label='确认密码', widget=forms.PasswordInput)
 
-    confirm_password = forms.CharField(label='确认密码',widget=forms.PasswordInput)
     class Meta:
         model = models.AdminInfo
         fields = ['password']
-        widgets={'password':forms.PasswordInput(render_value=True)}
+        widgets = {'password': forms.PasswordInput(render_value=True)}
 
     def clean_password(self):
         pwd = self.cleaned_data.get('password')
@@ -126,8 +127,10 @@ class AdminResetModelForm(forms.ModelForm):
 
         # return的字段将会保存到数据库中
         return confirm_pwd
-def admin_reset(request,nid):
-    '''密码重置'''
+
+
+def admin_reset(request, nid):
+    """密码重置"""
 
     reset_id = models.AdminInfo.objects.filter(id=nid).first()
 
@@ -136,12 +139,15 @@ def admin_reset(request,nid):
 
     title = "{}的重置密码".format(reset_id.username)
 
-    if request.method=='GET':
+    if request.method == 'GET':
         form = AdminResetModelForm()
-        return render(request, 'add.html', {'title': title, "form":form})
+        return render(request, 'add.html', {'title': title, "form": form})
 
     form = AdminResetModelForm(data=request.POST, instance=reset_id)
     if form.is_valid():
         form.save()
         return redirect('/admin/')
-    return render(request, 'add.html', {'title': title, "form":form})
+    return render(request, 'add.html', {'title': title, "form": form})
+
+
+

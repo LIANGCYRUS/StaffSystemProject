@@ -1,6 +1,5 @@
 {% load static %}
 
-
 <!doctype html>
 <html lang="en">
   <head>
@@ -42,20 +41,30 @@
 <main class="form-signin">
   <form method="post" novalidate>
     {% csrf_token %}
-    <div class="form-floating">
+      <h2 class="mb-lg-5">登录系统</h2>
+    <div class="form-floating mt-2">
         {{ form.username }}
-        <span>{{ form.username.error.0 }}</span>
 {#      <input type="email" class="form-control" id="floatingInput" placeholder="name@example.com">#}
-      <label for="floatingInput">用户邮箱</label>
+      <label for="floatingInput">用户账号</label>
+        <span>{{ form.username.error.0 }}</span>
     </div>
-    <div class="form-floating">
+    <div class="form-floating mt-2">
          {{ form.password }}
-        <span>{{ form.password.error.0 }}</span>
 {#      <input type="password" class="form-control" id="floatingPassword" placeholder="Password">#}
       <label for="floatingPassword">用户密码</label>
+    <span>{{ form.password.error.0 }}</span>
     </div>
+      <div class="row">
+          <div class="col-7">
+            {{ form.login_verification_code }}
+        <span>{{ form.login_verification_code.error.0 }}</span>
+          </div>
+          <div class="col-5">
+              <img src="/image/code/" alt="验证码" style="width: 150px; height: 35px" />
+          </div>
 
-    <button class="w-100 btn btn-lg btn-primary" type="submit">Sign in</button>
+      </div>
+    <button class="w-100 btn btn-lg btn-primary mt-4" type="submit">登录</button>
     <p class="mt-5 mb-3 text-muted">&copy; 2022–2023</p>
   </form>
 </main>

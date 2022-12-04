@@ -47,4 +47,8 @@ urlpatterns = [
 
     # 账户管理
     path('login/', account.login),
+    path('image/code/', account.LoginVerificationCode),
+
+#     登出管理
+    path('logout/', account.logout),
 ]
