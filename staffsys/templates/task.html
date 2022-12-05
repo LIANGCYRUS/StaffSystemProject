@@ -1,0 +1,48 @@
+{% extends 'layout.html' %}
+
+
+{% block content %}
+    <div class="card">
+          <h5 class="card-header">任务管理</h5>
+        <div class="card-body row">
+            {% for i in form %}
+                <div class="col-3">
+                    <lable>{{ i.label }}</lable>
+                    {{ i }}
+                </div>
+            {% endfor %}
+        </div>
+        <div class="row">
+            <a href="#" class="btn btn-primary col-3">添加</a>
+        </div>
+    </div>
+{% endblock %}
+
+{% block js %}
+
+    <script type="text/javascript">
+        $(function (){
+            bindBtn1Event();
+        })
+
+        function bindBtn1Event(){
+            $('#btn1').click(
+                function (){
+                    $.ajax({
+                        url:"/task/ajax/",
+                        type:'post',
+                        data:{
+                            n1:123,
+                            n2:456,
+                            n3:789
+                        },
+                        success: function (res){
+                            console.log(res)
+                        }
+
+                    })
+                }
+            )
+        }
+    </script>
+{% endblock %}

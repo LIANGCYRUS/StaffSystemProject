@@ -10,8 +10,6 @@ from django.core.paginator import Paginator, Page
 
 # 页码分类
 
-
-
 def index(request):
     if request.method == 'GET':
         dep_data = models.staff_department.objects.all()

@@ -60,3 +60,11 @@ class AdminInfo(models.Model):
     """管理员 数据库表"""
     username = models.CharField(verbose_name="管理员名", max_length=16)
     password = models.CharField(verbose_name="管理员密码", max_length=200)
+
+
+class Task(models.Model):
+    title = models.CharField(verbose_name="任务名称", max_length=64)
+    detail = models.TextField(verbose_name="任务内容")
+    level_choice = ((1, '紧急'), (2, '重要'), (3, '一般'),)
+    level = models.SmallIntegerField(verbose_name='任务等级', choices=level_choice, default=1)
+    create_time = models.DateTimeField(verbose_name="创建时间", auto_now_add=True)

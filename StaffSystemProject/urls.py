@@ -15,7 +15,7 @@ Including another URLconf
 """
 from django.contrib import admin
 from django.urls import path
-from staffsys import views, admin, account
+from staffsys import views, admin, account, task
 
 urlpatterns = [
     # path('admin/', admin.site.urls),
@@ -38,7 +38,7 @@ urlpatterns = [
     path('mobile/<int:nid>/edit/', views.mobile_edit),
     path('mobile/<int:nid>/del/', views.mobile_del),
 
-    #管理员管理
+    # 管理员管理
     path('admin/', admin.admin_index),
     path('admin/add', admin.admin_add),
     path('admin/<int:nid>/del/', admin.admin_del),
@@ -49,6 +49,10 @@ urlpatterns = [
     path('login/', account.login),
     path('image/code/', account.LoginVerificationCode),
 
-#     登出管理
+    #     登出管理
     path('logout/', account.logout),
+
+    path('task/', task.task_list),
+    path('task/ajax/', task.task_ajax),
+
 ]
