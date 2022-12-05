@@ -54,5 +54,6 @@ urlpatterns = [
 
     path('task/', task.task_list),
     path('task/ajax/', task.task_ajax),
+    path('task/add/', task.task_add),
 
 ]

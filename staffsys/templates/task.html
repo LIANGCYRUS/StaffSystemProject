@@ -2,18 +2,92 @@
 
 
 {% block content %}
-    <div class="card">
-          <h5 class="card-header">任务管理</h5>
-        <div class="card-body row">
-            {% for i in form %}
-                <div class="col-3">
-                    <lable>{{ i.label }}</lable>
-                    {{ i }}
-                </div>
-            {% endfor %}
+    <div class="card mb-5">
+        <h5 class="card-header">任务管理</h5>
+        <div class="card-body">
+            <div>
+                <form method="post" id="AddTaskForm">
+                    <div class="row">
+                        {% for field in form %}
+                            <div class="col position-relative">
+                                <label>{{ field.label }}</label>
+                                {{ field }}
+                                <span class="position-absolute error-msg" style="color: red"></span>
+                            </div>
+                        {% endfor %}
+                    </div>
+                    <div>
+                        <button type="button" class="btn btn-primary mt-5" id="btnAddTask">添加</button>
+                    </div>
+                </form>
+            </div>
         </div>
-        <div class="row">
-            <a href="#" class="btn btn-primary col-3">添加</a>
+    </div>
+    <div class="card mt-5">
+        <h5 class="card-header">任务列表</h5>
+        <div class="card-body">
+            <table class="table table-striped">
+                <thead>
+                <tr>
+                    <th scope="col">序号</th>
+                    <th scope="col">id</th>
+                    <th scope="col">标题</th>
+                    <th scope="col">级别</th>
+                    <th scope="col">创建时间</th>
+                    <th scope="col">操作</th>
+                </tr>
+                </thead>
+                <tbody>
+                {% for item in data.object_list %}
+                    <tr>
+                        <td>{{ data.start_index | add:forloop.counter0 }}</td>
+                        <td>{{ item.id }}</td>
+                        <td>{{ item.title }}</td>
+                        <td>{{ item.get_level_display }}</td>
+                        {#                <td>{{ item.update_time| date:"Y-m-d H:i:s" }}</td>#}
+                        <td>{{ item.create_time| date:"Y-m-d H:i:s" }}</td>
+                        <td>
+                            <a href="" class="btn btn-secondary btn-sm">编辑</a>
+                            <a href="" class="btn btn-danger btn-sm">删除</a>
+                        </td>
+                    </tr>
+                {% endfor %}
+                </tbody>
+            </table>
+            {#    分页开始    #}
+            <nav aria-label="Page navigation">
+                <ul class="pagination justify-content-end">
+                    <li class="page-item"><a class="page-link" href="?page=1" aria-label="Previous">首页</a></li>
+                    <li class="page-item">
+                        {% if mobile_paginator.has_previous %}
+                            <a class="page-link" href="?page={{ mobile_paginator.previous_page_number }}"
+                               aria-label="Previous"><span aria-hidden="true">&laquo;</span></a>
+                        {% endif %}
+                    </li>
+                    {% for i in  page_range %}
+                        {% if mobile_paginator.number == i %}
+                            <li class="page-item active"><a class="page-link" href="?page={{ i }}"
+                                                            aria-label="Previous">{{ i }}</a></li>
+                        {% else %}
+                            <li class="page-item"><a class="page-link" href="?page={{ i }}"
+                                                     aria-label="Previous">{{ i }}</a></li>
+                        {% endif %}
+
+                    {% endfor %}
+                    <li class="page-item">
+                        {% if mobile_paginator.has_next %}
+                            <a class="page-link" href="?page={{ mobile_paginator.next_page_number }}" aria-label="Next"><span
+                                    aria-hidden="true">&raquo;</span></a>
+                        {% endif %}
+                    </li>
+                    <li class="page-item"><a class="page-link" href="?page={{ mobile_paginator.paginator.num_pages }}"
+                                             aria-label="Previous">尾页</a></li>
+                    <li class="page-item">
+                        <span>当前第{{ mobile_paginator.number }}页 / 总共{{ mobile_paginator.paginator.num_pages }}页</span>
+                    </li>
+                </ul>
+            </nav>
+            {#    分页结束    #}
         </div>
     </div>
 {% endblock %}
@@ -21,23 +95,53 @@
 {% block js %}
 
     <script type="text/javascript">
-        $(function (){
+        $(function () {
             bindBtn1Event();
+            bindBtnAddEvent();
         })
 
-        function bindBtn1Event(){
+        function bindBtn1Event() {
             $('#btn1').click(
-                function (){
+                function () {
                     $.ajax({
-                        url:"/task/ajax/",
-                        type:'post',
-                        data:{
-                            n1:123,
-                            n2:456,
-                            n3:789
+                        url: "/task/ajax/",
+                        type: 'post',
+                        data: {
+                            n1: 123,
+                            n2: 456,
+                            n3: 789
                         },
-                        success: function (res){
+                        success: function (res) {
                             console.log(res)
+                        }
+
+                    })
+                }
+            )
+        }
+
+        function bindBtnAddEvent() {
+            $('#btnAddTask').click(
+                function () {
+                    {# 错误信息清除，这个目的主要是，错误信息弹出，就会一直存在，#}
+                    $(".error-msg").empty()
+
+                    $.ajax({
+                        url: "/task/add/",
+                        type: 'post',
+                        data: $("#AddTaskForm").serialize(),
+                        dataType: "JSON",
+                        success: function (res) {
+                            if (res.status) {
+                                alert("添加成功");
+                                {# 使用 location进行页面刷新#}
+                                location.reload()
+                            } else {
+
+                                $.each(res.error, function (name, data) {
+                                    $("#id_" + name).next().text(data[0])
+                                })
+                            }
                         }
 
                     })
