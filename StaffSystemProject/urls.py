@@ -15,7 +15,7 @@ Including another URLconf
 """
 from django.contrib import admin
 from django.urls import path
-from staffsys import views, admin, account, task
+from staffsys import views, admin, account, task, order
 
 urlpatterns = [
     # path('admin/', admin.site.urls),
@@ -40,7 +40,7 @@ urlpatterns = [
 
     # 管理员管理
     path('admin/', admin.admin_index),
-    path('admin/add', admin.admin_add),
+    path('admin/add/', admin.admin_add),
     path('admin/<int:nid>/del/', admin.admin_del),
     path('admin/<int:nid>/reset/', admin.admin_reset),
     # path('admin/<int:nid>/edit/', admin.admin_edit),
@@ -55,5 +55,10 @@ urlpatterns = [
     path('task/', task.task_list),
     path('task/ajax/', task.task_ajax),
     path('task/add/', task.task_add),
+
+    # 订单管理
+    path('order/', order.order_list),
+    path('order/add/', order.order_add),
+    path('order/delete/', order.order_delete),
 
 ]

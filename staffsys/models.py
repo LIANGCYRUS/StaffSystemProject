@@ -68,3 +68,19 @@ class Task(models.Model):
     level_choice = ((1, '紧急'), (2, '重要'), (3, '一般'),)
     level = models.SmallIntegerField(verbose_name='任务等级', choices=level_choice, default=1)
     create_time = models.DateTimeField(verbose_name="创建时间", auto_now_add=True)
+
+
+class Order(models.Model):
+    """工单"""
+    oid = models.CharField(verbose_name="订单号", max_length=64)
+    sku_title = models.CharField(verbose_name="产品名称", max_length=32)
+    price = models.IntegerField(verbose_name="价格")
+
+    status_choices = (
+        (1,"待支付"),
+        (2,"已付款"),
+    )
+    status = models.SmallIntegerField(verbose_name="订单状态", choices=status_choices, default=1)
+    order_time = models.DateTimeField(verbose_name="付款时间",)
+    # sys_upload_time = models.DateTimeField(verbose_name="上传时间",auto_now_add=True)
+    sys_upload_admin = models.ForeignKey(verbose_name="上传者", to="AdminInfo", on_delete=models.CASCADE)
